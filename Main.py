@@ -28,9 +28,9 @@ def menu():
             'Verb Conversion Practice (8)\n'
             'Return to Menu(0)\n'
         )
-        gm = try_input(0, 8)
+        gamemode = try_input(0, 8)
 
-        if gm != 0:
+        if gamemode != 0:
             print(
                 '\n--- Units ---\n'
                 'Book 1 Unit 1 Lesson 1 - 6 (1.1.1 - 1.1.6)\n'
@@ -53,30 +53,29 @@ def menu():
                 if unit in resources:
                     break
             
-            if gm == 1 or gm == 2:
-                print(
-                    '\n--- Duration ---\n'
-                    'Cycles (1)\n'
-                    'Until 100% Correct (2)\n'
-                    'Endless (3)\n'
-                    'Return to Menu (0)\n'
-                )
-                time = try_input(0, 3)
+            print(
+                '\n--- Duration ---\n'
+                'Cycles (1)\n'
+                'Until 100% Correct (2)\n'
+                'Endless (3)\n'
+                'Return to Menu (0)\n'
+            )
+            time = try_input(0, 3)
+            if time == 1:
+                cycles = 0
+                while not cycles > 0:
+                    try:
+                        cycles = int(input('Enter number of cycles: \n'))
+                    except:
+                        pass
+            
 
-                
-                if time == 1:
-                    cycles = 0
-                    while not cycles > 0:
-                        try:
-                            cycles = int(input('Enter number of cycles: \n'))
-                        except:
-                            pass
-                    
-                    game(cycles, [0,1] if gm == 1 else [1,0], resources[unit])
+            if gamemode == 1:
+                game_translation(cycles, [0,1] if gm == 1 else [1,0], resources[unit])
 
 
-                else:
-                    game(
+            elif gamemode == 2:
+                game_translation(
                         -1 if time == 2 else -2,
                          [0,1] if gm == 1 else [1,0],
                          resources[unit]
@@ -95,7 +94,7 @@ def menu():
 
 
 
-def game(cycles, index, material):
+def game_translation(cycles, index, material):
     score = {'correct': 0, 'total': 0}
     loops = 0
 
