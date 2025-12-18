@@ -48,7 +48,7 @@ def menu():
             while True:
                 unit = input("Select Unit:\n")
                 if unit == "0":
-                    gm = 0
+                    gamemode = 0
                     break
                 if unit in resources:
                     break
@@ -70,16 +70,9 @@ def menu():
                         pass
             
 
-            if gamemode == 1:
-                game_translation(cycles, [0,1] if gm == 1 else [1,0], resources[unit])
+            if gamemode == 1 or gamemode == 2:
+                game_translation((-1 if time == 2 else -2 if time == 3 else cycles), ([0,1] if gamemode == 1 else [1,0]), resources[unit])
 
-
-            elif gamemode == 2:
-                game_translation(
-                        -1 if time == 2 else -2,
-                         [0,1] if gm == 1 else [1,0],
-                         resources[unit]
-                         )
         
             
     elif menu_ == 2:
