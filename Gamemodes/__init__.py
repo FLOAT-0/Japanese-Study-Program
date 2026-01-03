@@ -1,0 +1,1 @@
+from game1 import gamemode_translation
