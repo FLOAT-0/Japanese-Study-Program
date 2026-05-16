@@ -110,6 +110,101 @@ def try_input(min, max):
 
 
 
+
+def gamemode_translation(cycles, index, material):
+    score = {'correct': 0, 'total': 0}
+    loops = 0
+
+
+    if cycles == -1:
+        while True:
+            loops += 1
+            score = {'correct': 0, 'total': 0}
+            game_translation_questions(index, material, score)
+
+            current_score = score['correct']/score['total'] if score['total'] > 0 else 0
+            print(f'Score: {score['correct']}/{score['total']} ({(current_score)*100:.2f}%)\n')
+            if current_score != 1:
+                print(f'Cycle {loops} completed.\n')
+            else:
+                print('Practice completed.\n')
+                break
+
+
+    elif cycles == -2:
+        while True:
+            loops += 1
+            game_translation_questions(index, material, score)
+
+            current_score = score['correct']/score['total'] if score['total'] > 0 else 0
+            print(
+                f'Score: {score['correct']}/{score['total']} ({(current_score)*100:.2f}%)'
+                f'Loop {loops} completed.\n'
+            )
+        
+
+    else:
+        for i in range(cycles):
+            game_translation_questions(index, material, score)
+
+            current_score = score['correct']/score['total'] if score['total'] > 0 else 0
+            print(
+                f'\nScore: {score['correct']}/{score['total']} ({(current_score)*100:.2f}%)'
+                f'Cycle {i+1}/{cycles} completed.\n'
+                )
+
+def game_translation_questions(index, material, score):
+    random.shuffle(material)
+
+    for value in material:
+
+        raw_question = value[index[0]]
+
+        # Always reduce to a single string
+        if isinstance(raw_question, list):
+            questions = normalize_text(raw_question)
+            question_text = random.choice(questions)
+        else:
+            question_text = raw_question
+
+        language = ['English', 'Japanese']
+        user_input = input(
+            f'\nWhat is the {language[index[0]]} for "{question_text}"?\n'
+        )
+
+        answer = value[index[1]]
+
+        if user_input == 'exit':
+            print('Game exited.\n')
+            return
+
+        valid_answers = normalize_text(answer)
+
+        if user_input.strip() in valid_answers:
+            print('Correct!\n')
+            score['correct'] += 1
+        else:
+            print("Incorrect.")
+
+            if isinstance(answer, list):
+                print(f'The correct answers are: {", ".join(answer)}\n')
+            else:
+                print(f'The correct answer is: {answer}\n')
+
+            while True:
+                user_input = input('Type the correct answer to continue:\n')
+                if user_input == 'exit':
+                    print('Game exited.\n')
+                    return
+                if normalize_text(user_input.strip())[0] in valid_answers:
+                    break
+
+        score['total'] += 1
+
+def normalize_spaces(s):
+    return " ".join(s.split())
+
+
 def expand_slashes(text):
     parts = text.split()
 
@@ -174,10 +269,10 @@ def expand_optional(answer_str):
 
     # --- English word-level slash handling ---
     for version in base_versions:
-        if '/' in version:
-            results.update(expand_slashes(version))
+        if "/" in version:
+            results.update(normalize_spaces(v) for v in expand_slashes(version))
         else:
-            results.add(version)
+            results.add(normalize_spaces(version))
 
     return list(results)
 
